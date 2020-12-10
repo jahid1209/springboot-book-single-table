@@ -62,6 +62,34 @@ docker run -p 9090:8080 j1209/book-api.jar
 
 **Make sure 9090 port is free**
 
+To run the prebuild image
+
+```aidl
+docker run -p 9090:8080 j1209/book-api.jar:latest
+```
+
+or using docker-compose
+
+```
+docker-compose up -d
+```
+There is also another docker compose file for development purpose.
+
+**Build/Run with docker-compose**
+
+To, build the docker image and run it with docker-compose simply execute this command below
+
+```aidl
+docker-compose -f docker-compose.yml up -d
+```
+
+There is also another docker compose file for development purpose.
+```aidl
+docker-compose -f docker-compose.dev.yml up -d
+```
+It's will first build the image with the docker context, Then run the app in 8080 port
+
+
 #### Access the application from browser
 
 Assuming the application is running on local machine, if so then the URL to access the swagger defination will be -
