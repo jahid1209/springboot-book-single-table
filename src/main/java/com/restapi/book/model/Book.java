@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.*;
+import javax.persistence.*;;
 import java.util.List;
 
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -34,8 +34,6 @@ public class Book {
     public void setType(String type) {
         this.type = type;
     }
-
-
     public Book(){}
 
     public Book(int id, String bookName, String publishedDate, Author author, String type) {
@@ -45,7 +43,6 @@ public class Book {
         this.author = author;
         this.type = type;
     }
-
     public int getId() {
         return id;
     }

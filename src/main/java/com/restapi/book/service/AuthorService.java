@@ -1,14 +1,17 @@
 package com.restapi.book.service;
 
+import com.restapi.book.dto.AuthorDto;
 import com.restapi.book.model.Author;
-import com.restapi.book.model.Book;
 import com.restapi.book.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 public class AuthorService {
@@ -18,8 +21,20 @@ public class AuthorService {
     AuthorRepository authorRepository;
 
 
-    public List<Author> getAllAuthors()
+
+    public List<Author> getAllAuthors(Integer pageNo, Integer pageSize)
     {
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        Page<Author> pagedResult = authorRepository.findAll(paging);
+        if(pagedResult.hasContent()) {
+            return pagedResult.getContent();
+        }
+        else {
+            return new ArrayList<Author>();
+        }
+
+        /*
+
         List<Author> temp = new ArrayList<Author>();
         try{
             authorRepository.findAll().forEach(temp::add);
@@ -28,9 +43,14 @@ public class AuthorService {
             System.out.println("***** Exception in getting all authors *****");
         }
         return temp;
+
+        */
     }
 
-    public Author createAuthor(Author author) throws Exception{
+    public Author createAuthor(AuthorDto authorDto) throws Exception{
+        Author author =  new Author();
+        author.setName(authorDto.getName());
+        author.setDob(authorDto.getDob());
         Author createdAuthor = authorRepository.save(author);
         if(createdAuthor != null){
             return  createdAuthor;
@@ -56,7 +76,7 @@ public class AuthorService {
         return author;
     }
 
-    public Author updateAuthor(Author author,String authorId) {
+    public Author updateAuthor(AuthorDto authorDto,String authorId) {
 
         Optional<Author> optional = authorRepository.findById(Integer.parseInt(authorId));
         Author existingAuthor = optional.get();
@@ -64,18 +84,12 @@ public class AuthorService {
         try {
 
             authorRepository.deleteById(Integer.parseInt(authorId));
-            if (author.getDob() != null) {
-                existingAuthor.setDob(author.getDob());
+            if (authorDto.getDob() != null) {
+                existingAuthor.setDob(authorDto.getDob());
             }
-            if (author.getName() != null) {
-                existingAuthor.setName(author.getName());
+            if (authorDto.getName() != null) {
+                existingAuthor.setName(authorDto.getName());
             }
-            if (author.getBooksByAuthor() != null) {
-                existingAuthor.setBooksByAuthor(author.getBooksByAuthor());
-            }
-            System.out.println(" Name: "+existingAuthor.getName());
-            System.out.println(" AuthorId: "+existingAuthor.getAuthorId());
-
             authorRepository.save(existingAuthor);
 
             return existingAuthor;

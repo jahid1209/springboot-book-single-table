@@ -1,10 +1,8 @@
 package com.restapi.book.service;
 
-import com.restapi.book.model.Author;
-import com.restapi.book.model.Book;
+import com.restapi.book.dto.BookDto;
+import com.restapi.book.model.*;
 
-import com.restapi.book.model.Story;
-import com.restapi.book.model.Thesis;
 import com.restapi.book.repository.AuthorRepository;
 import com.restapi.book.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,32 +27,11 @@ public class BookService {
     BookService()
     {
     }
-    public List<Book> getAllBooks()
-    {
+
+    public List<Book> getFilteredBooks(String type) {
+        System.out.println("Type :"+type);
         List<Book> temp = new ArrayList<Book>();
-        try{
-            temp = bookRepository.findAll();
-        }catch (Exception e)
-        {
-            System.out.println("***** Exception in getting all books *****");
-        }
-        for(int i=0;i<temp.size();i++)
-        {
-            Author author = temp.get(i).getAuthor();
-            //temp.get(i).setAuthor(author);
-        }
-        return temp;
-    }
-    public List<Book> getPreferedBooksList(String type)
-    {
         List<Book> filteredList = new ArrayList<Book>();
-        List<Book> temp = new ArrayList<Book>();
-        try{
-            bookRepository.findAll().forEach(temp::add);
-        }catch (Exception e)
-        {
-            System.out.println("***** Exception in getting prefered books List *****");
-        }
         for(int i=0;i<temp.size();i++)
         {
             if(temp.get(i).getType().equals(type))
@@ -62,58 +39,38 @@ public class BookService {
                 filteredList.add(temp.get(i));
             }
         }
-
         return filteredList;
     }
+    public List<Book> getAllBooks()
+    {
+        List<Book> temp = new ArrayList<Book>();
 
-    public Book addBook(Book book) throws Exception{
-        System.out.println("***** trying to add story book *****");
-        Book savedBook=null;
-        try {
-            Optional<Author> author = authorRepository.findById(book.getAuthor().getAuthorId());
-            if(author != null){
-                book.setAuthor(author.get());
-                savedBook = bookRepository.save(book);
-            }
-            List<Book> books = author.get().getBooksByAuthor();
-            if(book == null){
-                books = new ArrayList<>();
-            }
-            books.add(savedBook);
-            author.get().setBooksByAuthor(books);
-            authorRepository.save(author.get());
-        }catch(Exception e)
+        try{
+            temp = bookRepository.findAll();
+        }catch (Exception e)
         {
-            e.printStackTrace();
-            System.out.println("******** => Dhora khaise chandu <=********");
+            System.out.println("***** Exception in getting all books *****");
         }
-        if(savedBook != null){
-            System.out.println("***** story book added  *****");
-            return  savedBook;
-        }
-
-        return null;
+        return temp;
     }
 
-    public Book updateBook(Book book, String id) {
+    public Book updateBook(BookDto bookDto, String id) {
 
         Optional<Book> optional = bookRepository.findById(Integer.parseInt(id));
 
         if(optional != null){
             try {
                 Book bookPrev = optional.get();
-                if(book.getAuthor()!=null)
-                    bookPrev.setAuthor(book.getAuthor());
-                if(book.getBookName()!=null)
-                    bookPrev.setBookName(book.getBookName());
-                if(book.getPublishedDate()!=null)
-                    bookPrev.setPublishedDate(book.getPublishedDate());
+
+                if(bookDto.getBookName()!=null)
+                    bookPrev.setBookName(bookDto.getBookName());
+                if(bookDto.getPublishedDate()!=null)
+                    bookPrev.setPublishedDate(bookDto.getPublishedDate());
                 bookRepository.save(bookPrev);
                 return bookPrev;
 
             }catch (Exception e){
                 e.printStackTrace();
-                System.out.println("****** Exception while updating ******");
             }
         }
         return null;
@@ -131,25 +88,73 @@ public class BookService {
         }
         List<Book> listOfBooks = bookRepository.findAll();
         Book deletedBook = book.get();
-
         for (int i=0;i<listOfBooks.size();i++)
         {
             if(listOfBooks.get(i).getId() == Integer.parseInt(id))
             {
                 bookRepository.delete(listOfBooks.get(i));
-
+                break;
             }
         }
+        return deletedBook;
+    }
+    public Book addBook(BookDto bookDto, String type, String authorId) throws Exception{
 
-        try {
-
-            return deletedBook;
-
-        }catch (Exception e)
-        {
-            System.out.println("******** Exception while deletion ********");
+        Optional<Author> author = authorRepository.findById(Integer.parseInt(authorId));
+        List<Book> books = author.get().getBooksByAuthor();
+        if(books == null){
+            books = new ArrayList<Book>();
         }
-        return null;
+        if(type.equals("story"))
+        {
+            Story story = new Story();
+            story.setType("story");
+            story.setGenre(bookDto.getGenre());
+            story.setAuthor(author.get());
+            story.setBookName(bookDto.getBookName());
+            story.setPublishedDate(bookDto.getPublishedDate());
+            books.add(story);
+            author.get().setBooksByAuthor(books);
+            authorRepository.save(author.get());
+
+            return story;
+        }
+        else if(type.equals("journal"))
+        {
+            Journal journal = new Journal();
+            journal.setType("journal");
+            journal.setPublisher(bookDto.getPublisher());
+            journal.setAuthor(author.get());
+            journal.setBookName(bookDto.getBookName());
+            journal.setPublishedDate(bookDto.getPublishedDate());
+            bookRepository.save(journal);
+            books.add(journal);
+            author.get().setBooksByAuthor(books);
+            authorRepository.save(author.get());
+
+            return journal;
+
+        }
+
+        else if(type.equals("thesis"))
+        {
+            Thesis thesis = new Thesis();
+            thesis.setType("journal");
+            thesis.setTopic(bookDto.getTopic());
+            thesis.setAuthor(author.get());
+            thesis.setBookName(bookDto.getBookName());
+            thesis.setPublishedDate(bookDto.getPublishedDate());
+            bookRepository.save(thesis);
+            books.add(thesis);
+            author.get().setBooksByAuthor(books);
+            authorRepository.save(author.get());
+
+            return thesis;
+
+        }
+        else
+            return null;
+
     }
 
 }
