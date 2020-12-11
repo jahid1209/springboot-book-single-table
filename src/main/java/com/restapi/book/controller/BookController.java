@@ -37,13 +37,15 @@ public class BookController {
             @ApiResponse(code = 400, message = PAYLOAD_SYNTAX_ERROR )
     })
     public List<Book> getAllBooks(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "3") Integer size,
             @ApiParam(value = "To filter the retrieved books (type Can be 'story' or 'thesis' or 'journal)")
             @RequestParam(name = "type", required = false)  String type ){
 
         if(type!="" && type!=null)
-            return bookService.getFilteredBooks(type);
+            return bookService.getFilteredBooks(type,page,size);
         else
-            return bookService.getAllBooks();
+            return bookService.getAllBooks(page,size);
     }
 
     @ApiOperation(

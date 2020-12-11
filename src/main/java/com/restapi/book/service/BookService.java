@@ -6,6 +6,9 @@ import com.restapi.book.model.*;
 import com.restapi.book.repository.AuthorRepository;
 import com.restapi.book.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -28,10 +31,11 @@ public class BookService {
     {
     }
 
-    public List<Book> getFilteredBooks(String type) {
-        System.out.println("Type :"+type);
-        List<Book> temp = new ArrayList<Book>();
-        List<Book> filteredList = new ArrayList<Book>();
+    public List<Book> getFilteredBooks(String type,Integer pageNo,Integer pageSize) {
+        /*List<Book> temp = new ArrayList<Book>();
+
+        bookRepository.findAll().forEach(temp::add);
+
         for(int i=0;i<temp.size();i++)
         {
             if(temp.get(i).getType().equals(type))
@@ -39,11 +43,35 @@ public class BookService {
                 filteredList.add(temp.get(i));
             }
         }
-        return filteredList;
+        return filteredList;*/
+        List<Book> filteredList = new ArrayList<Book>();
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        Page<Book> pagedResult = bookRepository.findAll(paging);
+        if(pagedResult.hasContent()) {
+            for(int i=0;i<pagedResult.getTotalElements();i++)
+            {
+                 if(pagedResult.getContent().get(i).getType().equals(type)) {
+                     filteredList.add(pagedResult.getContent().get(i));
+                 }
+            }
+            return filteredList;
+        }
+        else {
+            return new ArrayList<Book>();
+        }
     }
-    public List<Book> getAllBooks()
+    public List<Book> getAllBooks(Integer pageNo, Integer pageSize)
     {
-        List<Book> temp = new ArrayList<Book>();
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        Page<Book> pagedResult = bookRepository.findAll(paging);
+        if(pagedResult.hasContent()) {
+            return pagedResult.getContent();
+        }
+        else {
+            return new ArrayList<Book>();
+        }
+
+        /*   List<Book> temp = new ArrayList<Book>();
 
         try{
             temp = bookRepository.findAll();
@@ -51,7 +79,7 @@ public class BookService {
         {
             System.out.println("***** Exception in getting all books *****");
         }
-        return temp;
+        return temp;*/
     }
 
     public Book updateBook(BookDto bookDto, String id) {
@@ -79,6 +107,7 @@ public class BookService {
     public Book deleteBook(String id) {
 
         Optional<Book> book=null;
+        List<Book> listOfBooks=null;
         try {
             book = bookRepository.findById(Integer.parseInt(id));
 
@@ -86,7 +115,7 @@ public class BookService {
         {
             System.out.println("Book cant be found");
         }
-        List<Book> listOfBooks = bookRepository.findAll();
+        bookRepository.findAll().forEach(listOfBooks::add);
         Book deletedBook = book.get();
         for (int i=0;i<listOfBooks.size();i++)
         {
