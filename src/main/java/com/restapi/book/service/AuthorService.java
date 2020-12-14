@@ -2,9 +2,12 @@ package com.restapi.book.service;
 
 import com.restapi.book.dto.AuthorDto;
 import com.restapi.book.model.Author;
+import com.restapi.book.model.Book;
 import com.restapi.book.repository.AuthorRepository;
+import com.restapi.book.repository.FilteredListDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,7 +24,6 @@ public class AuthorService {
     AuthorRepository authorRepository;
 
 
-
     public List<Author> getAllAuthors(Integer pageNo, Integer pageSize)
     {
         Pageable paging = PageRequest.of(pageNo, pageSize);
@@ -32,19 +34,6 @@ public class AuthorService {
         else {
             return new ArrayList<Author>();
         }
-
-        /*
-
-        List<Author> temp = new ArrayList<Author>();
-        try{
-            authorRepository.findAll().forEach(temp::add);
-        }catch (Exception e)
-        {
-            System.out.println("***** Exception in getting all authors *****");
-        }
-        return temp;
-
-        */
     }
 
     public Author createAuthor(AuthorDto authorDto) throws Exception{

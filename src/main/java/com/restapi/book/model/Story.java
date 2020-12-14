@@ -1,11 +1,13 @@
 package com.restapi.book.model;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
+@DiscriminatorValue(value = "story")
 public class Story extends Book {
-    @Column(nullable=false)
+    @Column
     private String genre;
 
 

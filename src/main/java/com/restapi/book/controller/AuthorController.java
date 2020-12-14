@@ -1,6 +1,4 @@
 package com.restapi.book.controller;
-
-
 import com.restapi.book.dto.AuthorDto;
 import com.restapi.book.model.Author;
 import com.restapi.book.model.Book;
@@ -30,8 +28,8 @@ public class AuthorController {
     @GetMapping("/")
 
     @ApiOperation(
-            value = "get all authors information.",
-            notes = "get all authors information.",
+            value = "retrieves all author's information.",
+            notes = "retrieves all author's information.",
             response = Author.class
     )
     @ApiResponses(value = {
@@ -47,13 +45,14 @@ public class AuthorController {
     public List<Author> getAllAuthors(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "3") Integer size) {
+
         return authorService.getAllAuthors(page,size);
     }
 
     @PostMapping("/")
     @ApiOperation(
-            value = "post an authors information.",
-            notes = "post an authors information.",
+            value = "creates an author with the provided information",
+            notes = "creates an author with the provided information",
             response = Author.class
     )
     @ApiResponses(value = {
@@ -81,8 +80,8 @@ public class AuthorController {
     @DeleteMapping("/{authorId}")
 
     @ApiOperation(
-            value = "delete an author's information.",
-            notes = "delete an author's information.",
+            value = "deletes an author",
+            notes = "delete an author",
             response = Author.class
     )
     @ApiResponses(value = {
@@ -106,8 +105,8 @@ public class AuthorController {
     }
     @PutMapping("{authorId}")
     @ApiOperation(
-            value = "post an authors information.",
-            notes = "post an authors information.",
+            value = "adds an author",
+            notes = "adds an author",
             response = Author.class
     )
     @ApiResponses(value = {

@@ -49,8 +49,8 @@ public class BookController {
     }
 
     @ApiOperation(
-            value = "Post a book information.",
-            notes = "Post book information.",
+            value = "Add a book ",
+            notes = "Add a book",
             response = Book.class
     )
     @ApiResponses(value = {
@@ -81,8 +81,8 @@ public class BookController {
     }
 
     @ApiOperation(
-            value = "Update a  Book's information.",
-            notes = "Update a Book's information.",
+            value = "Updates a  Book's information; bookName and publishedDate can't be null",
+            notes = "Updates a  Book's information; bookName and publishedDate can't be null",
             response = Book.class
     )
     @ApiResponses(value = {
@@ -104,8 +104,8 @@ public class BookController {
     }
 
     @ApiOperation(
-            value = "Delete a  Book's information.",
-            notes = "Delete a Book's information.",
+            value = "Deletes a  Book",
+            notes = "Deletes a Book",
             response = Book.class
     )
     @ApiResponses(value = {

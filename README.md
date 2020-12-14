@@ -87,7 +87,7 @@ There is also another docker compose file for development purpose.
 ```aidl
 docker-compose -f docker-compose.dev.yml up -d
 ```
-It's will first build the image with the docker context, Then run the app in 8080 port
+It will first build the image with the docker context, Then run the app in 9090 port
 
 
 #### Access the application from browser

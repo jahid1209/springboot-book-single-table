@@ -23,37 +23,4 @@ public class BookApiApplication {
         System.out.println("Run hoise, Yea!!!");
 
 	}
-
-
-    ///api/v1/author
-
 }
-/*
-	{
-
-        "bookName": "updated Harry Potter 2",
-        "author": "updated J.K Rowling",
-        "publishedDate": "2007",
-        "genre": "fantasy",
-        "type": "story"
-    }
-
-     {
-        "bookName": "Algorithm and concepts",
-        "author": "CLRS",
-        "publishedDate": "2002",
-        "topic":"algorithm",
-        "type": "thesis"
-    }
-
-
-     {
-        "bookName": "hijibiji",
-        "author": "hijibiji",
-        "publishedDate": "2007",
-        "publisher":"IEEE",
-        "type": "journal"
-    }
-
-
-*/

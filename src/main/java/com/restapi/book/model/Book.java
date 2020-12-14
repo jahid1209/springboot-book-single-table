@@ -7,7 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.*;;
 import java.util.List;
 
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 @Entity
 public class Book {
 
@@ -19,29 +20,20 @@ public class Book {
     private String bookName;
 
     private String publishedDate;
+
     @ManyToOne(targetEntity=Author.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="author_fk")
     @JsonBackReference
     private Author author;
 
-    @ApiModelProperty(readOnly = true)
-    private String type;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
     public Book(){}
 
-    public Book(int id, String bookName, String publishedDate, Author author, String type) {
+    public Book(int id, String bookName, String publishedDate, Author author) {
         this.id = id;
         this.bookName = bookName;
         this.publishedDate = publishedDate;
         this.author = author;
-        this.type = type;
+
     }
     public int getId() {
         return id;
