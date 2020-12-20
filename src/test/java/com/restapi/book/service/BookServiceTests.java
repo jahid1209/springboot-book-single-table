@@ -30,6 +30,8 @@ class BookServiceTests {
 
     @Mock
     private BookRepository bookRepository;
+    @Mock
+    private AuthorRepository authorRepository;
 
     @Mock
     private FilteredListDao filteredListDao;
@@ -64,6 +66,8 @@ class BookServiceTests {
 
     @Test
     public void testAddBook() throws Exception {
+
+        when( authorRepository.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(Utils.singleAuthor()));
 
         when(bookRepository.save(any(Book.class))).thenReturn(Utils.singleBook());
 
